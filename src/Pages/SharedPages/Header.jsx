@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 import useAuth from '../../Hooks/useAuth';
 import { useState } from 'react';
+import { IoNotifications } from "react-icons/io5";
 
 
 
@@ -10,6 +11,7 @@ const Header = () => {
   const { user, logout } = useAuth();
   const link = <>
     <Link to={'/'}>Home</Link>
+    <Link><IoNotifications /></Link>
  
   </>
 
@@ -34,18 +36,18 @@ const Header = () => {
   <p onClick={handleLogOut} className="cursor-pointer hover:bg-gray-400 rounded-md px-1">Logout</p>
 </>
   return (
-    <div className="shadow-xl ">
+    <div className="shadow-xl text-white bg-blue-500">
       <div className="navbar max-w-7xl mx-auto">
         <div className="navbar-start">
           
-          <img className='h-12 w-16' src="https://i.ibb.co/VDvtN8Z/Smart-Select-20231123-230405-Canva.jpg" alt="" />
-          <h2 className='ml-0 md:2 text-xl sm:text-2xl md:text-4xl font-semibold text-red-900'>ParcelVerge</h2>
+          <img className='h-12 w-16' src="https://i.ibb.co/Xj7HDtz/logo.png" alt="" />
+          <h2 className='ml-0 md:2 text-xl sm:text-2xl md:text-4xl font-semibold'>ParcelVerge</h2>
         </div>
         <div className="navbar-center flex">
           
         </div>
         <div className="navbar-end flex">
-        <ul className="menu menu-horizontal px-1 gap-5 md:text-lg font-bold">
+        <ul className="menu menu-horizontal flex items-center px-1 gap-2 md:text-xl font-bold">
             {link}
           </ul>
           <div>
