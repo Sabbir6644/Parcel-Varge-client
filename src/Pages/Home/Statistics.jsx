@@ -1,10 +1,22 @@
 
 import CountUp from 'react-countup';
+import useAxiosPublic from '../../Hooks/useAxiosPublic';
+import { useQuery } from '@tanstack/react-query';
 
 const Statistics = () => {
+  const axiosPublic = useAxiosPublic();
      const parcelsBooked = 1250;
      const parcelsDelivered = 1120;
-     const users = 1530;
+      
+     const allUserCount = async () => {
+      const res = await axiosPublic.get('/userCount');
+      return res;
+ }
+ const { data: count } = useQuery({
+  queryKey: ['allUserCount'],
+  queryFn: allUserCount,
+});
+const users=(count?.data?.count);
   return (
      <div>
           <h2 className="text-3xl font-semibold text-center my-8">Our Statistics</h2>

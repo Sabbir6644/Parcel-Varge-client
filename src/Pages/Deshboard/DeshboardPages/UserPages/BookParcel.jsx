@@ -1,10 +1,15 @@
 import { useState } from 'react';
+import useAuth from '../../../../Hooks/useAuth';
+import useAxiosSecure from '../../../../Hooks/useAxiosSecure';
+import Swal from 'sweetalert2';
 
 const BookParcel = () => {
+  const axiosSecure= useAxiosSecure();
+  const {user}=useAuth();
   const today = new Date().toISOString().split('T')[0];
   const [formData, setFormData] = useState({
-    name: 'John Doe', // Placeholder name
-    email: 'john@example.com', // Placeholder email
+    name: user?.displayName, 
+    email: user?.email, 
     phoneNumber: '',
     parcelType: '',
     parcelWeight: '',
@@ -15,6 +20,8 @@ const BookParcel = () => {
     deliveryAddressLatitude: '',
     deliveryAddressLongitude: '',
     price: 0,
+    bookingDate: new Date(),
+    status:'pending',
   });
 // console.log(formData);
   const calculatePrice = (weight) => {
@@ -44,10 +51,20 @@ const BookParcel = () => {
 
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    // Add logic to store the form data in MongoDB collection
+    const response = await axiosSecure.post('/parcelBook', formData)
+    // console.log(response.data?.acknowledged);
     // console.log('Form Data:', formData);
+    if (response?.data?.acknowledged) {
+      Swal.fire({
+        position: 'center',
+        icon: 'success',
+        title: 'Your Booking Successful!',
+        showConfirmButton: false,
+        timer: 1500
+   })
+    }
   };
 
   return (
