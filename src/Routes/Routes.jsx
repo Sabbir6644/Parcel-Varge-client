@@ -8,6 +8,7 @@ import BookParcel from "../Pages/Deshboard/DeshboardPages/UserPages/BookParcel";
 import WebStatistics from "../Pages/Deshboard/DeshboardPages/AdminPages/WebStatistics";
 import AllParcels from "../Pages/Deshboard/DeshboardPages/AdminPages/AllParcels";
 import Registration from "../Components/Authentication/Registration";
+import MyParcels from "../Pages/Deshboard/DeshboardPages/UserPages/MyParcels";
 
 
 const router = createBrowserRouter([
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
         {
           path:"allParcel",
           element:<AllParcels/>
+        },
+        {
+          path:"myParcel",
+          element:<MyParcels/>
         },
        ]
      },
