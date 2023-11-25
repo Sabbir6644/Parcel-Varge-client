@@ -59,7 +59,7 @@ const Registration = () => {
                          const imageData = await  ImageUpload(image)
                          const imageUrl= (imageData?.data?.display_url);
                          const userInfo = { name, email, imageUrl, userType };
-                         axiosPublic.post('/regigter', userInfo)
+                         axiosPublic.post('/register', userInfo)
                          .then(response=>{
                               console.log(response.data);
                          })

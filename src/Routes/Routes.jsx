@@ -9,6 +9,7 @@ import WebStatistics from "../Pages/Deshboard/DeshboardPages/AdminPages/WebStati
 import AllParcels from "../Pages/Deshboard/DeshboardPages/AdminPages/AllParcels";
 import Registration from "../Components/Authentication/Registration";
 import MyParcels from "../Pages/Deshboard/DeshboardPages/UserPages/MyParcels";
+import UpdatteParcel from "../Pages/Deshboard/DeshboardPages/UserPages/UpdatteParcel";
 
 
 const router = createBrowserRouter([
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
         {
           path:"myParcel",
           element:<MyParcels/>
+        },
+        {
+          path:"update/:id",
+          element:<UpdatteParcel/>
         },
        ]
      },

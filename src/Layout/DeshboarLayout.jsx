@@ -7,6 +7,7 @@ import useAdmin from "../Hooks/useAdmin";
 import AdminNav from "../Pages/Deshboard/DeshboardNav/AdminNav";
 import useDeliveryMan from "../Hooks/useDeliveryMan";
 import DeliveryMenNav from "../Pages/Deshboard/DeshboardNav/DeliveryMenNav";
+import Loading from "../Components/Loading/Loading";
 
 
 const DeshboarLayout = () => {
@@ -25,7 +26,7 @@ const DeshboarLayout = () => {
                               {/* <UserNav/> */}
                               {
                                    adminLoading || deliveryMenLoading ? (
-                                        <p>Loading</p>
+                                        <Loading/>
                                    ) : admin ? (
                                         <AdminNav />
                                    ) : deliveryMen ? (

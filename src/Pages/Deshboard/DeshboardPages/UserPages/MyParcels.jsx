@@ -19,10 +19,7 @@ const MyParcels = () => {
           queryFn: myBookings,
      });
      const myParcel = data?.data;
-     // console.log('my parcel', myParcel);
      const handleCancel = async (id) => {
-          // console.log('cancle id',_id);
-          // console.log('cancle id',myParcel._id);
           Swal.fire({
                title: "Are you sure?",
                text: "You won't be able to revert this!",
@@ -34,7 +31,7 @@ const MyParcels = () => {
           }).then(async (result) => {
                if (result.isConfirmed) {
 
-                    const res = await axiosSecure.delete(`/user/cancelBooking/${id}`)
+                    const res = await axiosSecure.delete(`/cancelBooking/${id}`)
                     console.log(res);
                     if (res?.data?.deletedCount > 0) {
                          refetch();
@@ -59,7 +56,7 @@ const MyParcels = () => {
                     ) :
                          (<div>
                               {
-                                   myParcel.length < 1 ? (
+                                   myParcel?.length < 1 ? (
                                         <div className="flex justify-center items-center min-h-screen">
                                              <img src="https://i.ibb.co/HKnfZjp/empty.png" alt="" />
                                              <p className="text-5xl font-bold text-center font-rancho">You have no ordered any food</p>
@@ -96,7 +93,8 @@ const MyParcels = () => {
                                                                            <td>{parcel?.status}</td>
                                                                            {
                                                                                 parcel?.status === 'pending' ? <td className="flex gap-2"><Link to={`/deshboard/update/${parcel?._id}`}><button className="btn">Update</button></Link>
-                                                                                     <button onClick={() => handleCancel(parcel._id)} className="btn">Cancel</button></td> : <td></td>
+                                                                                     <button onClick={() => handleCancel(parcel._id)} className="btn">Cancel</button></td> : <td><button className="btn" disabled="disabled">Update</button>
+                                                                                     <button className="btn" disabled="disabled">Cancel</button></td>
                                                                            }
 
                                                                       </tr>

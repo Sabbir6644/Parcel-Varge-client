@@ -4,6 +4,7 @@ import UserNav from './UserNav';
 import useAdmin from "../../../Hooks/useAdmin";
 import useDeliveryMan from "../../../Hooks/useDeliveryMan";
 import DeliveryMenNav from "./DeliveryMenNav";
+import Loading from "../../../Components/Loading/Loading";
 
 
 
@@ -22,7 +23,7 @@ const DeshboardNav = () => {
             <ul tabIndex={0} className="text-black dropdown-content mt-3 z-[1] p-2 shadow bg-primary-Color rounded-box w-52">
               {
                 adminLoading || deliveryMenLoading ? (
-                  <p>Loading</p>
+                  <Loading/>
                 ) : admin ? (
                   <AdminNav />
                 ): deliveryMen?(
