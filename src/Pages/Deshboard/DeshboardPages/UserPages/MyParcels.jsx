@@ -7,9 +7,41 @@ import Swal from "sweetalert2";
 import { useMemo, useState } from "react";
 
 
+
+
 const MyParcels = () => {
      const { user } = useAuth();
      const axiosSecure = useAxiosSecure();
+
+     const [parcelId, setParcelId] = useState(0);
+     const [rating, setRating] = useState(0);
+     const [feedback, setFeedback] = useState('');
+     const [showModal, setShowModal] = useState(false);
+     // Other state variables for user's name, image, delivery men's id, etc.
+
+     const handleSubmit = async (event) => {
+          event.preventDefault();
+          axiosSecure.put(`/review/${parcelId}`, {
+               review: rating,
+               feedback: feedback,
+
+          })
+               .then(response => {
+                    if (response.data.modifiedCount > 0) {
+                         refetch();
+                         Swal.fire({
+                              title: "Review!",
+                              text: "Review Submitted",
+                              icon: "success",
+                              showConfirmButton: false,
+                              timer: 1500
+                         });
+                    }
+               })
+
+
+          setShowModal(false);
+     };
 
      const myBookings = async () => {
           const res = await axiosSecure.get(`/parcelBook/${user.email}`);
@@ -22,22 +54,22 @@ const MyParcels = () => {
      const myParcel = data?.data;
      const [statusFilter, setStatusFilter] = useState('');
 
-// Update the filter value when the dropdown changes
-const handleStatusFilterChange = (e) => {
-  setStatusFilter(e.target.value);
-};
+     // Update the filter value when the dropdown changes
+     const handleStatusFilterChange = (e) => {
+          setStatusFilter(e.target.value);
+     };
 
 
      const filteredData = useMemo(() => {
           let filteredParcels = myParcel;
-        
+
           if (statusFilter && statusFilter !== 'Booking Status') {
-            filteredParcels = myParcel.filter((parcel) => parcel.status === statusFilter);
+               filteredParcels = myParcel.filter((parcel) => parcel.status === statusFilter);
           }
-        
+
           return filteredParcels;
-        }, [myParcel, statusFilter]);
-        
+     }, [myParcel, statusFilter]);
+
 
 
      const handleCancel = async (id) => {
@@ -68,6 +100,7 @@ const handleStatusFilterChange = (e) => {
                }
           });
      }
+
      return (
           <div>
 
@@ -99,7 +132,7 @@ const handleStatusFilterChange = (e) => {
                                                                       <option>Booking Status</option>
                                                                       <option value={'pending'}>Pending</option>
                                                                       <option value={'on the way'}>On The Way</option>
-                                                                      <option value={'delivered'}>Delivered</option>
+                                                                      <option value={'Delivered'}>Delivered</option>
                                                                  </select>
                                                                  </th>
                                                                  <th className="text-center">Action</th>
@@ -119,10 +152,29 @@ const handleStatusFilterChange = (e) => {
                                                                            <td>{parcel?.deliveryManId ? parcel?.deliveryManId : 'Not Assigned'}</td>
                                                                            <td>{parcel?.status}</td>
                                                                            {
-                                                                                parcel?.status === 'pending' ? <td className="flex gap-2"><Link to={`/deshboard/update/${parcel?._id}`}><button className="btn">Update</button></Link>
-                                                                                     <button onClick={() => handleCancel(parcel._id)} className="btn">Cancel</button></td> : <td className="flex gap-2"><button className="btn" disabled="disabled">Update</button>
-                                                                                     <button className="btn" disabled="disabled">Cancel</button></td>
+                                                                                parcel?.status === 'Delivered' ? (
+                                                                                     <td className="flex justify-center"><button onClick={() => {
+                                                                                          setShowModal(true);
+                                                                                          setParcelId(parcel._id);
+
+                                                                                     }} className="btn">Review</button></td>
+                                                                                ) : (
+                                                                                     parcel?.status === 'pending' ? (
+                                                                                          <td className="flex gap-2">
+                                                                                               <Link to={`/dashboard/update/${parcel?._id}`}>
+                                                                                                    <button className="btn">Update</button>
+                                                                                               </Link>
+                                                                                               <button onClick={() => handleCancel(parcel._id)} className="btn">Cancel</button>
+                                                                                          </td>
+                                                                                     ) : (
+                                                                                          <td className="flex gap-2">
+                                                                                               <button className="btn" disabled="disabled">Update</button>
+                                                                                               <button className="btn" disabled="disabled">Cancel</button>
+                                                                                          </td>
+                                                                                     )
+                                                                                )
                                                                            }
+
 
                                                                       </tr>
 
@@ -138,6 +190,46 @@ const handleStatusFilterChange = (e) => {
                          )
 
 
+               }
+
+               {
+                    showModal && <div className="fixed z-50 inset-0 overflow-y-auto bg-opacity-75 bg-gray-500 flex justify-center items-center">
+                         <div className="bg-white rounded shadow-lg p-6 max-w-md w-full">
+                              <h2 className="text-lg font-semibold mb-4">Give Review</h2>
+                              <form onSubmit={handleSubmit}>
+                                   <div className="mb-4">
+                                        <label className="block mb-1" htmlFor="rating">Rating out of 5:</label>
+                                        <input
+                                             type="number"
+                                             id="rating"
+                                             min={1}
+                                             max={5}
+                                             value={rating}
+                                             onChange={(e) => setRating(e.target.value)}
+                                             className="border rounded px-2 py-1 w-full"
+                                        />
+                                   </div>
+                                   <div className="mb-4">
+                                        <label className="block mb-1" htmlFor="feedback">Feedback:</label>
+                                        <textarea
+                                             id="feedback"
+                                             value={feedback}
+                                             onChange={(e) => setFeedback(e.target.value)}
+                                             className="border rounded px-2 py-1 w-full"
+                                             rows="4"
+                                        ></textarea>
+                                   </div>
+                                   {/* Add other form fields for user's name, image, etc. */}
+                                   <button
+                                        type="submit"
+                                        className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded shadow"
+                                   >
+                                        Submit Review
+                                   </button>
+                              </form>
+
+                         </div>
+                    </div>
                }
 
           </div>

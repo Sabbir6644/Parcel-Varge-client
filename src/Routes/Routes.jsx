@@ -12,6 +12,8 @@ import MyParcels from "../Pages/Deshboard/DeshboardPages/UserPages/MyParcels";
 import UpdatteParcel from "../Pages/Deshboard/DeshboardPages/UserPages/UpdatteParcel";
 import MyProfile from "../Pages/Deshboard/DeshboardPages/UserPages/MyProfile";
 import AllUsers from "../Pages/Deshboard/DeshboardPages/AdminPages/AllUsers";
+import AllDeliveryMen from "../Pages/Deshboard/DeshboardPages/AdminPages/AllDeliveryMen";
+import MyDeliveryList from "../Pages/Deshboard/DeshboardPages/DeliveryMenPages/MyDeliveryList";
 
 
 const router = createBrowserRouter([
@@ -66,6 +68,14 @@ const router = createBrowserRouter([
         {
           path:"allUser",
           element:<AllUsers/>
+        },
+        {
+          path:"allDeliveryMen",
+          element:<AllDeliveryMen/>
+        },
+        {
+          path:"myDeliveryList",
+          element:<MyDeliveryList/>
         },
        ]
      },

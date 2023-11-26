@@ -13,10 +13,6 @@ const AllParcels = () => {
 
      const [fromDate, setFromDate] = useState('');
      const [toDate, setToDate] = useState('');
-
-
-
-
      // 
      const axiosSecure = useAxiosSecure();
 
@@ -49,18 +45,12 @@ const AllParcels = () => {
           const requestedDeliveryDate = new Date(parcel.requestedDeliveryDate);
           const fromDateTime = fromDate ? new Date(fromDate) : new Date(0);
           const toDateTime = toDate ? new Date(toDate) : new Date();
-
-          console.log('From Date:', fromDateTime);
-          console.log('To Date:', toDateTime);
-          console.log('Requested Delivery Date:', requestedDeliveryDate);
-
-
           return requestedDeliveryDate >= fromDateTime && requestedDeliveryDate <= toDateTime;
      });
 
      const handleAssignDelivery = () => {
           // Handle the assignment logic here
-          console.log('Assign Delivery:', selectedDeliveryMan, approximateDeliveryDate, parcelId);
+          // console.log('Assign Delivery:', selectedDeliveryMan, approximateDeliveryDate, parcelId);
           axiosSecure.put(`/parcel/${parcelId}`, {
                status: 'on the way',
                deliveryManId: selectedDeliveryMan,
@@ -117,58 +107,58 @@ const AllParcels = () => {
 
 
                               {
-                                   filteredParcels?.length?
-                                       
-                                   (
-<div className='overflow-auto h-[450px] rounded-md uppercase'>
-                                   <table className="table rounded-md">
-                                        <thead className='bg-gray-200 text-base'>
-                                             <tr>
-                                                  <th>#</th>
-                                                  <th>Users Name</th>
-                                                  <th>Users Phone</th>
-                                                  <th>Booking Date</th>
-                                                  <th>Requested Delivery Date</th>
-                                                  <th>Cost</th>
-                                                  <th>Status</th>
-                                                  <th>Manage</th>
-                                             </tr>
-                                        </thead>
-                                        <tbody>
-                                             {filteredParcels?.map((parcel, index) => (
-                                                  <tr key={index}>
-                                                       <td>{index + 1}</td>
-                                                       <td>{parcel?.name}</td>
-                                                       <td>{parcel?.phoneNumber}</td>
-                                                       <td>{parcel?.bookingDate ? parcel.requestedDeliveryDate.split('T')[0] : ''}</td>
+                                   filteredParcels?.length ?
 
-                                                       <td>{parcel?.requestedDeliveryDate}</td>
-                                                       <td>{parcel?.price}</td>
-                                                       <td>{parcel?.status}</td>
-                                                       <td>
-                                                            <button
-                                                                 onClick={() => {
-                                                                      setShowModal(true);
-                                                                      setParcelId(parcel._id);
-                                                                 }}
-                                                                 className="px-3 py-1 bg-blue-500 text-white rounded-md focus:outline-none focus:bg-blue-600"
-                                                            >
-                                                                 Manage
-                                                            </button>
-                                                       </td>
-                                                  </tr>
-                                             ))}
-                                        </tbody>
-                                   </table>
-                              </div>
-                                   ):  <div className='flex justify-center items-center'>
-                                   <h2 className=' text-2xl font-medium'>No Data Found</h2>
-                                   </div>
+                                        (
+                                             <div className='overflow-auto h-[450px] rounded-md uppercase'>
+                                                  <table className="table rounded-md">
+                                                       <thead className='bg-gray-200 text-base'>
+                                                            <tr>
+                                                                 <th>#</th>
+                                                                 <th>Users Name</th>
+                                                                 <th>Users Phone</th>
+                                                                 <th>Booking Date</th>
+                                                                 <th>Requested Delivery Date</th>
+                                                                 <th>Cost</th>
+                                                                 <th>Status</th>
+                                                                 <th>Manage</th>
+                                                            </tr>
+                                                       </thead>
+                                                       <tbody>
+                                                            {filteredParcels?.map((parcel, index) => (
+                                                                 <tr key={index}>
+                                                                      <td>{index + 1}</td>
+                                                                      <td>{parcel?.name}</td>
+                                                                      <td>{parcel?.phoneNumber}</td>
+                                                                      <td>{parcel?.bookingDate ? parcel.requestedDeliveryDate.split('T')[0] : ''}</td>
+
+                                                                      <td>{parcel?.requestedDeliveryDate}</td>
+                                                                      <td>{parcel?.price}</td>
+                                                                      <td>{parcel?.status}</td>
+                                                                      <td>
+                                                                           <button
+                                                                                onClick={() => {
+                                                                                     setShowModal(true);
+                                                                                     setParcelId(parcel._id);
+                                                                                }}
+                                                                                className="px-3 py-1 bg-blue-500 text-white rounded-md focus:outline-none focus:bg-blue-600"
+                                                                           >
+                                                                                Manage
+                                                                           </button>
+                                                                      </td>
+                                                                 </tr>
+                                                            ))}
+                                                       </tbody>
+                                                  </table>
+                                             </div>
+                                        ) : <div className='flex justify-center items-center'>
+                                             <h2 className=' text-2xl font-medium'>No Data Found</h2>
+                                        </div>
                               }
 
 
 
-                              
+
 
                               {/* Modal */}
                               {showModal && (
