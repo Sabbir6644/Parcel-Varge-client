@@ -75,22 +75,26 @@ const AllUsers = () => {
                          <div>
                               <h2 className="text-center text-3xl font-semibold my-5">All Users</h2>
                               <div className="overflow-auto h-[450px] rounded-md uppercase">
-                                   <table className='table text-center'>
-                                        <thead className="bg-gray-200 text-base">
+                              <table className="table">
+                                   <thead className="bg-gray-200 text-base">
                                              <tr>
+                                                  <th>#</th>
                                                   <th>Users Name</th>
                                                   <th>Phone Number</th>
                                                   <th>Number of Parcels Booked</th>
                                                   <th>Total Spent Amount</th>
-                                                  <th className='text-center'>Actions</th>
+                                                  <th className='row-span-3 text-center'>Actions</th>
                                                   <th></th>
                                                   <th></th>
+                                                  <th></th>
+                                                  
                                              </tr>
                                         </thead>
                                         <tbody>
-                                             {currentUsers?.map((user) => (
+                                             {currentUsers?.map((user,index) => (
 
                                                   <tr key={user?._id}>
+                                                       <td>{index+1}</td>
                                                        <td>{user?.name}</td>
                                                        <td>{user?.parcels[0]?.phoneNumber ? user?.parcels[0]?.phoneNumber : user?.phoneNumber ? user?.phoneNumber : 'no number'}</td>
                                                        <td>{user?.parcels.length}</td>

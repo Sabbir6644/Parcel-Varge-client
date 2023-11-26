@@ -2,38 +2,84 @@ import { useState } from 'react';
 import useAxiosSecure from '../../../../Hooks/useAxiosSecure';
 import { useQuery } from '@tanstack/react-query';
 import Loading from '../../../../Components/Loading/Loading';
+import Swal from 'sweetalert2';
 
 const AllParcels = () => {
      const [showModal, setShowModal] = useState(false);
      const [selectedDeliveryMan, setSelectedDeliveryMan] = useState('');
      const [approximateDeliveryDate, setApproximateDeliveryDate] = useState('');
+     const [parcelId, setParcelId] = useState('');
+
+
+     const [fromDate, setFromDate] = useState('');
+     const [toDate, setToDate] = useState('');
+
+
+
+
      // 
      const axiosSecure = useAxiosSecure();
 
-     const allParcel = async () => {
-          const res = await axiosSecure.get('/parcels');
+     const allParcel = async (fromDate, toDate) => {
+          const res = await axiosSecure.get(`/parcels?fromDate=${fromDate}&toDate=${toDate}`);
           return res;
-     }
+     };
+
      const deliveryMen = async () => {
           const res = await axiosSecure.get('/deliverymen');
           return res;
      }
      const { data, isFetching, isLoading, refetch } = useQuery({
-          queryKey: ['allParcel'],
-          queryFn: allParcel,
+          queryKey: ['allParcel', fromDate, toDate],
+          queryFn: () => allParcel(fromDate, toDate),
      });
+
      const parcels = data?.data;
      // 
-     const { data:man } = useQuery({
+     const { data: man } = useQuery({
           queryKey: ['deliveryman'],
           queryFn: deliveryMen,
      });
-const deliveryMans= man?.data
-// console.log(deliveryMans);
+     const deliveryMans = man?.data
+     // console.log(deliveryMans);
+     const filteredParcels = parcels?.filter((parcel) => {
+          if (!fromDate && !toDate) {
+               return true; // If no date range is selected, return all parcels
+          }
+          const requestedDeliveryDate = new Date(parcel.requestedDeliveryDate);
+          const fromDateTime = fromDate ? new Date(fromDate) : new Date(0);
+          const toDateTime = toDate ? new Date(toDate) : new Date();
+
+          console.log('From Date:', fromDateTime);
+          console.log('To Date:', toDateTime);
+          console.log('Requested Delivery Date:', requestedDeliveryDate);
+
+
+          return requestedDeliveryDate >= fromDateTime && requestedDeliveryDate <= toDateTime;
+     });
 
      const handleAssignDelivery = () => {
           // Handle the assignment logic here
-          console.log('Assign Delivery:', selectedDeliveryMan, approximateDeliveryDate);
+          console.log('Assign Delivery:', selectedDeliveryMan, approximateDeliveryDate, parcelId);
+          axiosSecure.put(`/parcel/${parcelId}`, {
+               status: 'on the way',
+               deliveryManId: selectedDeliveryMan,
+               approximateDeliveryDate: approximateDeliveryDate,
+          })
+               .then(response => {
+                    if (response.data.modifiedCount > 0) {
+                         refetch();
+                         Swal.fire({
+                              title: "Updated!",
+                              text: "Status Updated",
+                              icon: "success",
+                              showConfirmButton: false,
+                              timer: 1500
+                         });
+                    }
+               })
+
+
           setShowModal(false);
      };
 
@@ -46,7 +92,35 @@ const deliveryMans= man?.data
                          <div className="container mx-auto">
                               <h1 className="text-center text-3xl font-semibold my-5">All Parcels</h1>
 
-                              <div className='overflow-auto h-[450px] rounded-md uppercase'>
+
+                              <div className="flex justify-around mb-4">
+                                   <div className='flex gap-2 items-center'>
+                                        <label htmlFor="">From</label>
+                                        <input
+                                             type="date"
+                                             className="border border-gray-300 rounded-md px-3 py-2"
+                                             value={fromDate}
+                                             onChange={(e) => setFromDate(e.target.value)}
+                                        />
+                                   </div>
+                                   <div className='flex gap-2 items-center'>
+                                        <label htmlFor="">To</label>
+                                        <input
+                                             type="date"
+                                             className="border border-gray-300 rounded-md px-3 py-2"
+                                             value={toDate}
+                                             onChange={(e) => setToDate(e.target.value)}
+                                        />
+                                   </div>
+                              </div>
+
+
+
+                              {
+                                   filteredParcels?.length?
+                                       
+                                   (
+<div className='overflow-auto h-[450px] rounded-md uppercase'>
                                    <table className="table rounded-md">
                                         <thead className='bg-gray-200 text-base'>
                                              <tr>
@@ -61,7 +135,7 @@ const deliveryMans= man?.data
                                              </tr>
                                         </thead>
                                         <tbody>
-                                             {parcels?.map((parcel, index) => (
+                                             {filteredParcels?.map((parcel, index) => (
                                                   <tr key={index}>
                                                        <td>{index + 1}</td>
                                                        <td>{parcel?.name}</td>
@@ -73,7 +147,10 @@ const deliveryMans= man?.data
                                                        <td>{parcel?.status}</td>
                                                        <td>
                                                             <button
-                                                                 onClick={() => setShowModal(true)}
+                                                                 onClick={() => {
+                                                                      setShowModal(true);
+                                                                      setParcelId(parcel._id);
+                                                                 }}
                                                                  className="px-3 py-1 bg-blue-500 text-white rounded-md focus:outline-none focus:bg-blue-600"
                                                             >
                                                                  Manage
@@ -84,6 +161,14 @@ const deliveryMans= man?.data
                                         </tbody>
                                    </table>
                               </div>
+                                   ):  <div className='flex justify-center items-center'>
+                                   <h2 className=' text-2xl font-medium'>No Data Found</h2>
+                                   </div>
+                              }
+
+
+
+                              
 
                               {/* Modal */}
                               {showModal && (
@@ -94,12 +179,12 @@ const deliveryMans= man?.data
                                                   <select
                                                        className="border border-gray-300 rounded-md px-3 py-2"
                                                        onChange={(e) => setSelectedDeliveryMan(e.target.value)}
-                                                  > 
-                                                  <option value="">Select Delivery Man</option>
-                                                  {
-                                                       deliveryMans?.map((man)=><option key={man._id} value={man._id}>{man?.name}</option>)
-                                                  }
-                                                       
+                                                  >
+                                                       <option value="">Select Delivery Man</option>
+                                                       {
+                                                            deliveryMans?.map((man) => <option key={man._id} value={man._id}>{man?.name}</option>)
+                                                       }
+
                                                        {/* Populate delivery men options here */}
                                                   </select>
                                                   <input

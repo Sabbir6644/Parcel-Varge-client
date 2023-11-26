@@ -111,16 +111,16 @@ const handleStatusFilterChange = (e) => {
                                                                  filteredData?.map((parcel, index) =>
                                                                       <tr key={index}>
                                                                            <th>{index + 1}</th>
-                                                                           {/* bookingDate */}
+                                                                           {/* bookingDate  deliveryManId, approximateDeliveryDate */}
                                                                            <td>{parcel?.parcelType}</td>
                                                                            <td>{parcel?.requestedDeliveryDate}</td>
                                                                            <td>{parcel?.approximateDeliveryDate ? parcel?.approximateDeliveryDate : 'Not Decided'}</td>
                                                                            <td>{parcel?.bookingDate?.split("T")[0]}</td>
-                                                                           <td>{parcel?.deliveryMenID ? parcel?.deliveryMenID : 'Not Assigned'}</td>
+                                                                           <td>{parcel?.deliveryManId ? parcel?.deliveryManId : 'Not Assigned'}</td>
                                                                            <td>{parcel?.status}</td>
                                                                            {
                                                                                 parcel?.status === 'pending' ? <td className="flex gap-2"><Link to={`/deshboard/update/${parcel?._id}`}><button className="btn">Update</button></Link>
-                                                                                     <button onClick={() => handleCancel(parcel._id)} className="btn">Cancel</button></td> : <td><button className="btn" disabled="disabled">Update</button>
+                                                                                     <button onClick={() => handleCancel(parcel._id)} className="btn">Cancel</button></td> : <td className="flex gap-2"><button className="btn" disabled="disabled">Update</button>
                                                                                      <button className="btn" disabled="disabled">Cancel</button></td>
                                                                            }
 
