@@ -37,10 +37,12 @@ const Login = () => {
           signInWithGoogle()
 
           .then((res) => {
+               // console.log(res?.user);
                const userInfo = {
                     email: res?.user?.email,
                     name: res?.user?.displayName,
                     photoURL: res.user?.photoURL,
+                    phoneNumber: res.user?.phoneNumber,
                     userType:"user"
 
                }

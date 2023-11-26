@@ -4,6 +4,7 @@ import useAxiosSecure from './../../../../Hooks/useAxiosSecure';
 import { Link } from "react-router-dom";
 import Loading from "../../../../Components/Loading/Loading";
 import Swal from "sweetalert2";
+import { useMemo, useState } from "react";
 
 
 const MyParcels = () => {
@@ -19,6 +20,26 @@ const MyParcels = () => {
           queryFn: myBookings,
      });
      const myParcel = data?.data;
+     const [statusFilter, setStatusFilter] = useState('');
+
+// Update the filter value when the dropdown changes
+const handleStatusFilterChange = (e) => {
+  setStatusFilter(e.target.value);
+};
+
+
+     const filteredData = useMemo(() => {
+          let filteredParcels = myParcel;
+        
+          if (statusFilter && statusFilter !== 'Booking Status') {
+            filteredParcels = myParcel.filter((parcel) => parcel.status === statusFilter);
+          }
+        
+          return filteredParcels;
+        }, [myParcel, statusFilter]);
+        
+
+
      const handleCancel = async (id) => {
           Swal.fire({
                title: "Are you sure?",
@@ -59,14 +80,14 @@ const MyParcels = () => {
                                    myParcel?.length < 1 ? (
                                         <div className="flex justify-center items-center min-h-screen">
                                              <img src="https://i.ibb.co/HKnfZjp/empty.png" alt="" />
-                                             <p className="text-5xl font-bold text-center font-rancho">You have no ordered any food</p>
+                                             <p className="text-5xl font-bold text-center font-rancho">You have no parcel history</p>
                                         </div>
                                    ) : (
                                         <div>
                                              <h2 className="text-center text-3xl font-semibold my-5">My parcel</h2>
-                                             <div className="overflow-x-auto rounded-md">
+                                             <div className="overflow-auto max-h-[500px] rounded-md uppercase">
                                                   <table className="table">
-                                                       <thead className="bg-gray-200">
+                                                       <thead className="bg-gray-200 text-base">
                                                             <tr>
                                                                  <th>#</th>
                                                                  <th>Parcel Type</th>
@@ -74,14 +95,20 @@ const MyParcels = () => {
                                                                  <th> Approximate Delivery Date</th>
                                                                  <th>Booking Date</th>
                                                                  <th>Delivery Men ID</th>
-                                                                 <th>Booking Status</th>
+                                                                 <th><select value={statusFilter} onChange={handleStatusFilterChange}>
+                                                                      <option>Booking Status</option>
+                                                                      <option value={'pending'}>Pending</option>
+                                                                      <option value={'on the way'}>On The Way</option>
+                                                                      <option value={'delivered'}>Delivered</option>
+                                                                 </select>
+                                                                 </th>
                                                                  <th className="text-center">Action</th>
                                                                  <th></th>
                                                             </tr>
                                                        </thead>
                                                        <tbody>
                                                             {
-                                                                 myParcel?.map((parcel, index) =>
+                                                                 filteredData?.map((parcel, index) =>
                                                                       <tr key={index}>
                                                                            <th>{index + 1}</th>
                                                                            {/* bookingDate */}

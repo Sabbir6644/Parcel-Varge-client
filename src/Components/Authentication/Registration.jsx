@@ -27,6 +27,7 @@ const Registration = () => {
      const emailRef = useRef(null);
      const imageRef = useRef(null);
      const passwordRef = useRef(null);
+     const phoneRef = useRef(null);
 
      const isStrongPassword = (password) => {
           // Regex pattern for at least one capital letter and one number
@@ -40,6 +41,7 @@ const Registration = () => {
           const email = e.target.email.value;
           const image = e.target.image.files[0];
           const password = e.target.password.value;
+          const phone = e.target.phoneNumber.value;
           const accept = e.target.terms.checked;
           const userType = e.target.userType.value;
           // const user = { name, email, image, password, userType };
@@ -58,7 +60,7 @@ const Registration = () => {
                          setAlram('');
                          const imageData = await  ImageUpload(image)
                          const imageUrl= (imageData?.data?.display_url);
-                         const userInfo = { name, email, imageUrl, userType };
+                         const userInfo = { name, email, imageUrl, userType, phoneNumber:phone };
                          axiosPublic.post('/register', userInfo)
                          .then(response=>{
                               console.log(response.data);
@@ -66,6 +68,7 @@ const Registration = () => {
                    updateProfile(result.user, {
                         displayName: name,
                         photoURL: imageUrl,
+                        phoneNumber: phone,
                    }).then(                            
                         Swal.fire({
                         position: 'center',
@@ -86,6 +89,7 @@ const Registration = () => {
                nameRef.current.value = '';
                emailRef.current.value = '';
                passwordRef.current.value = '';
+               phoneRef.current.value = '';
           }
                     )
 
@@ -122,6 +126,17 @@ const Registration = () => {
                                         name="email"
                                         ref={emailRef} className="border p-2 w-full mb-4"
                                         placeholder="youremail@mail.com" required
+                                   />
+                              </div>
+                              <div className="flex flex-col md:col-span-1">
+                                   <label htmlFor="email" className="block font-medium mb-1">
+                                        Phone Number
+                                   </label>
+                                   <input
+                                        type="tel"
+                                        name="phoneNumber"
+                                        ref={phoneRef} className="border p-2 w-full mb-4"
+                                        placeholder="01000000000" required
                                    />
                               </div>
                               <div className="flex flex-col md:col-span-1">

@@ -10,6 +10,8 @@ import AllParcels from "../Pages/Deshboard/DeshboardPages/AdminPages/AllParcels"
 import Registration from "../Components/Authentication/Registration";
 import MyParcels from "../Pages/Deshboard/DeshboardPages/UserPages/MyParcels";
 import UpdatteParcel from "../Pages/Deshboard/DeshboardPages/UserPages/UpdatteParcel";
+import MyProfile from "../Pages/Deshboard/DeshboardPages/UserPages/MyProfile";
+import AllUsers from "../Pages/Deshboard/DeshboardPages/AdminPages/AllUsers";
 
 
 const router = createBrowserRouter([
@@ -56,6 +58,14 @@ const router = createBrowserRouter([
         {
           path:"update/:id",
           element:<UpdatteParcel/>
+        },
+        {
+          path:"myProfile",
+          element:<MyProfile/>
+        },
+        {
+          path:"allUser",
+          element:<AllUsers/>
         },
        ]
      },
