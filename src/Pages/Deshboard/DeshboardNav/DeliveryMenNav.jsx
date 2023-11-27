@@ -5,7 +5,7 @@ const DeliveryMenNav = () => {
      return (
           <>
                <li><NavLink to={'/deshboard/myDeliveryList'}>My Delivery List</NavLink></li>
-               <li><NavLink>My Reviews</NavLink></li>
+               <li><NavLink to={'/deshboard/myReviews'}>My Reviews</NavLink></li>
 
           </>
      );

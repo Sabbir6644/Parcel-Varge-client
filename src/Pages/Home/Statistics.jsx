@@ -6,12 +6,20 @@ import { useQuery } from '@tanstack/react-query';
 const Statistics = () => {
   const axiosPublic = useAxiosPublic();
 
-     const parcelsDelivered = 1120;
+  const parcels = async () => {
+
+    const res = await axiosPublic.get('/parcel-counts');
+    return res;
+  }
+  const { data: parcelData } = useQuery({
+    queryKey: ['parcel'],
+    queryFn: parcels,
+  });
+  const parcelsCounts = parcelData?.data;
+  // console.log(parcelsCounts);
+
+     const parcelsDelivered = parcelsCounts?.deliveredParcels;
       
-     const allParcelsCount = async () => {
-      const res = await axiosPublic.get('/parcelsCount');
-      return res;
- }
      const allUserCount = async () => {
       const res = await axiosPublic.get('/userCount');
       return res;
@@ -20,11 +28,8 @@ const Statistics = () => {
   queryKey: ['allUserCount'],
   queryFn: allUserCount,
 });
- const { data: parcel } = useQuery({
-  queryKey: ['allParcelsCount'],
-  queryFn: allParcelsCount,
-});
-const parcelsBooked=(parcel?.data?.count);
+
+const parcelsBooked=parcelsCounts?.totalParcels;
 const users=(count?.data?.count);
   return (
      <div>

@@ -11,7 +11,8 @@ const MapViewModal = ({ latitude, longitude, closeModal }) => {
   });
 
   return (
-    <div className="map-container relative">
+
+      <div className=" max-w-[400px] max-h-[400px] top-20 mx-auto fixed z-50 inset-0 overflow-hidden bg-opacity-75 bg-gray-500 flex justify-center items-center">
       <ReactMapGL
         {...viewport}
         width="100%"
@@ -23,8 +24,9 @@ const MapViewModal = ({ latitude, longitude, closeModal }) => {
           <div>Delivery Location</div>
         </Marker>
       </ReactMapGL>
-      <button onClick={closeModal}>Close Map</button>
+      <button className='btn' onClick={closeModal}>Close Map</button>
     </div>
+
   );
 };
 

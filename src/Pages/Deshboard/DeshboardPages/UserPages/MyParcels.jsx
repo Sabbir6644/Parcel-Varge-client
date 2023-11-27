@@ -12,22 +12,31 @@ import { useMemo, useState } from "react";
 const MyParcels = () => {
      const { user } = useAuth();
      const axiosSecure = useAxiosSecure();
-
      const [parcelId, setParcelId] = useState(0);
+     const [deliveryMenId, setDeliveryMenId] = useState(0);
      const [rating, setRating] = useState(0);
      const [feedback, setFeedback] = useState('');
      const [showModal, setShowModal] = useState(false);
-     // Other state variables for user's name, image, delivery men's id, etc.
+     const [reviewSubmittedForParcel, setReviewSubmittedForParcel] = useState({});
 
      const handleSubmit = async (event) => {
           event.preventDefault();
-          axiosSecure.put(`/review/${parcelId}`, {
-               review: rating,
+          axiosSecure.post('/review', {
+               deliveryMenId: deliveryMenId,
+               parcelId: parcelId,
+               review: parseInt(rating),
                feedback: feedback,
+               reviewGiverName: user?.displayName,
+               reviewGiverImage: user?.photoURL,
+               reviewDate: new Date().toISOString().split('T')[0],
 
           })
                .then(response => {
-                    if (response.data.modifiedCount > 0) {
+                    if (response.data?.acknowledged) {
+                         setReviewSubmittedForParcel({
+                              ...reviewSubmittedForParcel,
+                              [parcelId]: true, // Update state to indicate review submission for the specific parcel
+                            });
                          refetch();
                          Swal.fire({
                               title: "Review!",
@@ -152,13 +161,27 @@ const MyParcels = () => {
                                                                            <td>{parcel?.deliveryManId ? parcel?.deliveryManId : 'Not Assigned'}</td>
                                                                            <td>{parcel?.status}</td>
                                                                            {
-                                                                                parcel?.status === 'Delivered' ? (
-                                                                                     <td className="flex justify-center"><button onClick={() => {
-                                                                                          setShowModal(true);
-                                                                                          setParcelId(parcel._id);
-
-                                                                                     }} className="btn">Review</button></td>
-                                                                                ) : (
+                                                                                parcel?.status === 'Delivered' ?  (
+                                                                                     reviewSubmittedForParcel[parcel._id] ? ( // Check if review is submitted for this parcel
+                                                                                       <td className="flex justify-center">
+                                                                                         <button className="btn" disabled>
+                                                                                           Review Submitted
+                                                                                         </button>
+                                                                                       </td>
+                                                                                     ):(
+                                                                                          <td className="flex justify-center">
+                                                                                            <button
+                                                                                              onClick={() => {
+                                                                                                setShowModal(true);
+                                                                                                setParcelId(parcel._id);
+                                                                                                setDeliveryMenId(parcel?.deliveryManId);
+                                                                                              }}
+                                                                                              className="btn"
+                                                                                            >
+                                                                                              Review
+                                                                                            </button>
+                                                                                          </td>
+                                                                                        )) : (
                                                                                      parcel?.status === 'pending' ? (
                                                                                           <td className="flex gap-2">
                                                                                                <Link to={`/dashboard/update/${parcel?._id}`}>
@@ -195,9 +218,36 @@ const MyParcels = () => {
                {
                     showModal && <div className="fixed z-50 inset-0 overflow-y-auto bg-opacity-75 bg-gray-500 flex justify-center items-center">
                          <div className="bg-white rounded shadow-lg p-6 max-w-md w-full">
-                              <h2 className="text-lg font-semibold mb-4">Give Review</h2>
+                              <h2 className="text-lg text-center font-semibold mb-4">Give Review</h2>
                               <form onSubmit={handleSubmit}>
-                                   <div className="mb-4">
+                                   <div className="mb-2">
+                                        <label className="block mb-1" htmlFor="rating">Name</label>
+                                        <input
+                                             type="text"
+                                             value={user?.displayName}
+                                             readOnly
+                                             className="border rounded px-2 py-1 w-full"
+                                        />
+                                   </div>
+                                   <div className="mb-2">
+                                        <label className="block mb-1" htmlFor="rating">Your Photo</label>
+                                        <input
+                                             type="text"
+                                             value={user?.photoURL}
+                                             readOnly
+                                             className="border rounded px-2 py-1 w-full"
+                                        />
+                                   </div>
+                                   <div className="mb-2">
+                                        <label className="block mb-1" htmlFor="rating">Delivery Men Id</label>
+                                        <input
+                                             type="text"
+                                             value={deliveryMenId}
+                                             readOnly
+                                             className="border rounded px-2 py-1 w-full"
+                                        />
+                                   </div>
+                                   <div className="mb-2">
                                         <label className="block mb-1" htmlFor="rating">Rating out of 5:</label>
                                         <input
                                              type="number"
@@ -209,7 +259,7 @@ const MyParcels = () => {
                                              className="border rounded px-2 py-1 w-full"
                                         />
                                    </div>
-                                   <div className="mb-4">
+                                   <div className="mb-2">
                                         <label className="block mb-1" htmlFor="feedback">Feedback:</label>
                                         <textarea
                                              id="feedback"

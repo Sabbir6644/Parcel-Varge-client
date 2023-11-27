@@ -1,21 +1,21 @@
 /* eslint-disable react/prop-types */
 import { GoogleAuthProvider, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 import { createContext, useEffect, useState } from "react";
-
 import auth from './../../../public/firebase.config';
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
+
+
 
 
 export const AuthContext = createContext()
 
 const AuthProvider = ({ children }) => {
-     const [success, setSuccess]=useState(false);
+     const [success, setSuccess]= useState(false);
      const [loading, setLoading] = useState(true);
      const [user, setUser] = useState();
      const axiosPublic = useAxiosPublic();
-     // theme toggle
-    
-     // loaded created user from database
+
+
      // google login
      const googleProvider = new GoogleAuthProvider();
      const signInWithGoogle = () => {
@@ -44,7 +44,6 @@ const AuthProvider = ({ children }) => {
                // 
                const userEmail = currentUser?.email || user?.email;
                const loggedUser = { email:userEmail }
-
                if (currentUser?.email) {
                     axiosPublic.post('/jwt', loggedUser, {withCredentials:true})
                  .then(res =>{
@@ -67,7 +66,7 @@ const AuthProvider = ({ children }) => {
      }, [axiosPublic,user?.email])
 
      const authInfo = {
-          user, success, signInWithGoogle,
+          user, success, signInWithGoogle, 
           logout, loading, setLoading, createUser, userLogin,
           
      }
