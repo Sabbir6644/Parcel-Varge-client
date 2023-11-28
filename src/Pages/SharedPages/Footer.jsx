@@ -5,18 +5,19 @@ const Footer = () => {
           <div className=" bg-blue-500 text-white">
                <footer className="footer max-w-7xl mx-auto px-10 pt-10 pb-5 ">
   <nav>
-    <header className="footer-title">Services</header> 
-    <a className="link link-hover">Branding</a>
-    <a className="link link-hover">Design</a>
-    <a className="link link-hover">Marketing</a>
-    <a className="link link-hover">Advertisement</a>
+    <header className="footer-title">Features</header> 
+    <p>Parcel Safety</p>
+    <p>Super Fast Delivery</p>
+    <p>24/7 Customer Support</p>
+
   </nav> 
   <nav>
-    <header className="footer-title">Company</header> 
-    <a className="link link-hover">About us</a>
-    <a className="link link-hover">Contact</a>
-    <a className="link link-hover">Jobs</a>
-    <a className="link link-hover">Press kit</a>
+    <header className="footer-title">Contact</header> 
+    <a className="link link-hover" href="tel:+1234567890">Call (+1234567890)</a>
+
+    <a className="link link-hover" href="mailto:parcelverge@info.com">Email: parcelverge@info.com</a>
+
+    
   </nav> 
   <nav>
     <header className="footer-title">Social</header> 

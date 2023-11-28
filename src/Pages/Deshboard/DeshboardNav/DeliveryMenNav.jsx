@@ -6,7 +6,7 @@ const DeliveryMenNav = () => {
           <>
                <li><NavLink to={'/deshboard/myDeliveryList'}>My Delivery List</NavLink></li>
                <li><NavLink to={'/deshboard/myReviews'}>My Reviews</NavLink></li>
-
+               <li><NavLink to={'/'}><button className="md:hidden">Home</button></NavLink></li>
           </>
      );
 };

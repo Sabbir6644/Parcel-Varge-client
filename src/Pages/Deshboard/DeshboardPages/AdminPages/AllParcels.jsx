@@ -22,7 +22,7 @@ const AllParcels = () => {
      };
 
      const deliveryMen = async () => {
-          const res = await axiosSecure.get('/deliverymen');
+          const res = await axiosSecure.get('/allDeliveryMen');
           return res;
      }
      const { data, isFetching, isLoading, refetch } = useQuery({
@@ -49,8 +49,7 @@ const AllParcels = () => {
      });
 
      const handleAssignDelivery = () => {
-          // Handle the assignment logic here
-          // console.log('Assign Delivery:', selectedDeliveryMan, approximateDeliveryDate, parcelId);
+  
           axiosSecure.put(`/parcel/${parcelId}`, {
                status: 'on the way',
                deliveryManId: selectedDeliveryMan,
@@ -111,32 +110,37 @@ const AllParcels = () => {
 
                                         (
                                              <div className='overflow-auto h-[450px] rounded-md uppercase'>
-                                                  <table className="table rounded-md">
+                                                  <table className="table-auto border-collapse border w-full border-gray-500">
                                                        <thead className='bg-gray-200 text-base'>
                                                             <tr>
-                                                                 <th>#</th>
-                                                                 <th>Users Name</th>
-                                                                 <th>Users Phone</th>
-                                                                 <th>Booking Date</th>
-                                                                 <th>Requested Delivery Date</th>
-                                                                 <th>Cost</th>
-                                                                 <th>Status</th>
-                                                                 <th>Manage</th>
+                                                                 <th className="border border-gray-500 px-4 py-2">#</th>
+                                                                 <th className="border border-gray-500 px-4 py-2">Users Name</th>
+                                                                 <th className="border border-gray-500 px-4 py-2">Users Phone</th>
+                                                                 <th className="border border-gray-500 px-4 py-2">Booking Date</th>
+                                                                 <th className="border border-gray-500 px-4 py-2">Requested Delivery Date</th>
+                                                                 <th className="border border-gray-500 px-4 py-2">Cost</th>
+                                                                 <th className="border border-gray-500 px-4 py-2">Status</th>
+                                                                 <th className="border border-gray-500 px-4 py-2">Manage</th>
                                                             </tr>
                                                        </thead>
                                                        <tbody>
                                                             {filteredParcels?.map((parcel, index) => (
                                                                  <tr key={index}>
-                                                                      <td>{index + 1}</td>
-                                                                      <td>{parcel?.name}</td>
-                                                                      <td>{parcel?.phoneNumber}</td>
-                                                                      <td>{parcel?.bookingDate ? parcel.requestedDeliveryDate.split('T')[0] : ''}</td>
-
-                                                                      <td>{parcel?.requestedDeliveryDate}</td>
-                                                                      <td>{parcel?.price}</td>
-                                                                      <td>{parcel?.status}</td>
-                                                                      <td>
-                                                                           <button
+                                                                      <td className='border border-gray-500 px-4 py-2'>{index + 1}</td>
+                                                                      <td className='border border-gray-500 px-4 py-2'>{parcel?.name}</td>
+                                                                      <td className='border border-gray-500 px-4 py-2'>{parcel?.phoneNumber}</td>
+                                                                      <td className='border border-gray-500 px-4 py-2'>{parcel?.bookingDate ? parcel.bookingDate.split('T')[0] : ''}</td>
+                                                                      <td className='border border-gray-500 px-4 py-2 text-center'>{parcel?.requestedDeliveryDate}</td>
+                                                                      <td className='border border-gray-500 px-4 py-2'>{parcel?.price}</td>
+                                                                      <td className='border border-gray-500 px-4 py-2'>{parcel?.status}</td>
+                                                                      <td className='border border-gray-500 px-4 py-2'>
+                                                                           {
+                                                                                parcel?.status==='Delivered'?<button
+                                                                                disabled
+                                                                                className="px-3 py-1 bg-gray-200 text-white rounded-md focus:outline-none focus:bg-blue-600"
+                                                                           >
+                                                                                Manage
+                                                                           </button>: <button
                                                                                 onClick={() => {
                                                                                      setShowModal(true);
                                                                                      setParcelId(parcel._id);
@@ -145,6 +149,7 @@ const AllParcels = () => {
                                                                            >
                                                                                 Manage
                                                                            </button>
+                                                                           }
                                                                       </td>
                                                                  </tr>
                                                             ))}
@@ -172,7 +177,7 @@ const AllParcels = () => {
                                                   >
                                                        <option value="">Select Delivery Man</option>
                                                        {
-                                                            deliveryMans?.map((man) => <option key={man._id} value={man._id}>{man?.name}</option>)
+                                                            deliveryMans?.map((man) => <option key={man._id} value={man?._id}>{man?.name}</option>)
                                                        }
 
                                                        {/* Populate delivery men options here */}

@@ -15,6 +15,8 @@ import AllUsers from "../Pages/Deshboard/DeshboardPages/AdminPages/AllUsers";
 import AllDeliveryMen from "../Pages/Deshboard/DeshboardPages/AdminPages/AllDeliveryMen";
 import MyDeliveryList from "../Pages/Deshboard/DeshboardPages/DeliveryMenPages/MyDeliveryList";
 import MyReviews from "../Pages/Deshboard/DeshboardPages/DeliveryMenPages/MyReviews";
+import PrivateRoute from "../Components/Authentication/PrivateRoute";
+import AdminRoutte from "../Components/Authentication/AdminRoutte";
 
 
 const router = createBrowserRouter([
@@ -40,47 +42,47 @@ const router = createBrowserRouter([
      },
      {
        path: "/deshboard",
-       element: <DeshboarLayout/>,
+       element: <PrivateRoute><DeshboarLayout/></PrivateRoute>,
        children:[
         {
           path:"bookParcel",
-          element:<BookParcel/>
+          element:<PrivateRoute><BookParcel/></PrivateRoute>
         },
         {
           path:"statistic",
-          element:<WebStatistics/>
+          element:<AdminRoutte><WebStatistics/></AdminRoutte>
         },
         {
           path:"allParcel",
-          element:<AllParcels/>
+          element:<AdminRoutte><AllParcels/></AdminRoutte>
         },
         {
           path:"myParcel",
-          element:<MyParcels/>
+          element:<PrivateRoute><MyParcels/></PrivateRoute>
         },
         {
           path:"update/:id",
-          element:<UpdatteParcel/>
+          element:<PrivateRoute><UpdatteParcel/></PrivateRoute>
         },
         {
           path:"myProfile",
-          element:<MyProfile/>
+          element:<PrivateRoute><MyProfile/></PrivateRoute>
         },
         {
           path:"allUser",
-          element:<AllUsers/>
+          element:<AdminRoutte><AllUsers/></AdminRoutte>
         },
         {
           path:"allDeliveryMen",
-          element:<AllDeliveryMen/>
+          element:<AdminRoutte><AllDeliveryMen/></AdminRoutte>
         },
         {
           path:"myDeliveryList",
-          element:<MyDeliveryList/>
+          element:<PrivateRoute><MyDeliveryList/></PrivateRoute>
         },
         {
           path:"myReviews",
-          element:<MyReviews/>
+          element:<PrivateRoute><MyReviews/></PrivateRoute>
         },
        ]
      },

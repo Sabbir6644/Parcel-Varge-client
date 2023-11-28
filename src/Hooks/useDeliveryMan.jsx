@@ -15,7 +15,7 @@ const useDeliveryMan = () => {
           enabled: !loading,
           queryFn: isDeliveryMen,
      });
-     console.log('deliveryMen',data?.data?.userType);
+     // console.log('deliveryMen',data?.data?.userType);
      if (data?.data?.userType ==='deliveryMen') {
           let deliveryMen =true;
           return{deliveryMen, deliveryMenLoading}

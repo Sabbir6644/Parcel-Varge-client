@@ -27,8 +27,8 @@ const WebStatistics = () => {
   });
   const bookingDatas = (bookingData?.data?.bookingsByDate);
 
-  const categories = bookingDatas?.map((item) => item._id);
-  const counts = bookingDatas?.map((item) => item.count);
+  const categories = bookingDatas?.map((item) => item?._id);
+  const counts = bookingDatas?.map((item) => item?.count);
 
 
   const bookingsByDate = {

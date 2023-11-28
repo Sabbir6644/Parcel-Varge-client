@@ -8,7 +8,7 @@ const AdminNav = () => {
                <li><NavLink to={'/deshboard/allUser'}> All Users</NavLink></li>
                <li><NavLink to={'/deshboard/allDeliveryMen'}> All Delivery Men</NavLink></li>
                <li><NavLink to={'/deshboard/statistic'}>Statistics</NavLink></li>
-               
+               <li><NavLink to={'/'}><button className="md:hidden">Home</button></NavLink></li>
               
                
           </>

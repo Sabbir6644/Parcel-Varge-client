@@ -40,7 +40,7 @@ const DeshboardNav = () => {
         </div>
 
         <div className="navbar-end">
-          <Link to={'/'}><button className="btn">Home</button></Link>
+          <Link to={'/'}><button className="btn hidden md:block">Home</button></Link>
         </div>
       </div>
     </div>

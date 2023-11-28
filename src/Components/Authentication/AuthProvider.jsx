@@ -48,16 +48,17 @@ const AuthProvider = ({ children }) => {
                     axiosPublic.post('/jwt', loggedUser, {withCredentials:true})
                  .then(res =>{
                    setSuccess(res.data.success);
-
+                   setLoading(false)
                  })
                }else{
                     axiosPublic.post('/logout', loggedUser, {withCredentials:true})
                     .then(res =>{
                       console.log(res.data);
+                      setLoading(false)
                     })
                   }
                // 
-               setLoading(false)
+               
                
           });
           return () => {

@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import Loading from "../../../../Components/Loading/Loading";
 import Swal from "sweetalert2";
 import { useMemo, useState } from "react";
+import Payment from "../../SharedDesboard/Payment/Payment";
+// import Payment from "../../SharedDesboard/Payment/Payment";
 
 
 
@@ -17,7 +19,8 @@ const MyParcels = () => {
      const [rating, setRating] = useState(0);
      const [feedback, setFeedback] = useState('');
      const [showModal, setShowModal] = useState(false);
-     const [reviewSubmittedForParcel, setReviewSubmittedForParcel] = useState({});
+     const [showPayModal, setPayShowModal] = useState(false);
+     const [price, setPrice] = useState(0);
 
      const handleSubmit = async (event) => {
           event.preventDefault();
@@ -33,11 +36,7 @@ const MyParcels = () => {
           })
                .then(response => {
                     if (response.data?.acknowledged) {
-                         setReviewSubmittedForParcel({
-                              ...reviewSubmittedForParcel,
-                              [parcelId]: true, // Update state to indicate review submission for the specific parcel
-                            });
-                         refetch();
+
                          Swal.fire({
                               title: "Review!",
                               text: "Review Submitted",
@@ -45,6 +44,7 @@ const MyParcels = () => {
                               showConfirmButton: false,
                               timer: 1500
                          });
+                         refetch();
                     }
                })
 
@@ -52,6 +52,15 @@ const MyParcels = () => {
           setShowModal(false);
      };
 
+     const allReview = async () => {
+          const res = await axiosSecure.get('/allReviews');
+          return res;
+     }
+     const { data: reviewsData } = useQuery({
+          queryKey: ['allReview'],
+          queryFn: allReview,
+     });
+     const reviews = reviewsData?.data;
      const myBookings = async () => {
           const res = await axiosSecure.get(`/parcelBook/${user.email}`);
           return res;
@@ -128,75 +137,84 @@ const MyParcels = () => {
                                         <div>
                                              <h2 className="text-center text-3xl font-semibold my-5">My parcel</h2>
                                              <div className="overflow-auto max-h-[500px] rounded-md uppercase">
-                                                  <table className="table">
+                                                  <table className="table-auto border-collapse border w-full border-gray-500">
                                                        <thead className="bg-gray-200 text-base">
                                                             <tr>
-                                                                 <th>#</th>
-                                                                 <th>Parcel Type</th>
-                                                                 <th>Requested Delivery Date</th>
-                                                                 <th> Approximate Delivery Date</th>
-                                                                 <th>Booking Date</th>
-                                                                 <th>Delivery Men ID</th>
-                                                                 <th><select value={statusFilter} onChange={handleStatusFilterChange}>
+                                                                 <th className="border border-gray-500 px-4 py-2">#</th>
+                                                                 <th className="border border-gray-500 px-4 py-2">Parcel Type</th>
+                                                                 <th className="border border-gray-500 px-4 py-2">Requested Delivery Date</th>
+                                                                 <th className="border border-gray-500 px-4 py-2"> Approximate Delivery Date</th>
+                                                                 <th className="border border-gray-500 px-4 py-2">Booking Date</th>
+                                                                 <th className="border border-gray-500 px-4 py-2">Delivery Men ID</th>
+                                                                 <th className="border border-gray-500 px-4 py-2"><select value={statusFilter} onChange={handleStatusFilterChange}>
                                                                       <option>Booking Status</option>
                                                                       <option value={'pending'}>Pending</option>
                                                                       <option value={'on the way'}>On The Way</option>
                                                                       <option value={'Delivered'}>Delivered</option>
                                                                  </select>
                                                                  </th>
-                                                                 <th className="text-center">Action</th>
+                                                                 <th className="border border-gray-500 px-4 py-2 text-center">Action</th>
                                                                  <th></th>
                                                             </tr>
                                                        </thead>
-                                                       <tbody>
+                                                       <tbody className="text-sm">
                                                             {
                                                                  filteredData?.map((parcel, index) =>
                                                                       <tr key={index}>
-                                                                           <th>{index + 1}</th>
-                                                                           {/* bookingDate  deliveryManId, approximateDeliveryDate */}
-                                                                           <td>{parcel?.parcelType}</td>
-                                                                           <td>{parcel?.requestedDeliveryDate}</td>
-                                                                           <td>{parcel?.approximateDeliveryDate ? parcel?.approximateDeliveryDate : 'Not Decided'}</td>
-                                                                           <td>{parcel?.bookingDate?.split("T")[0]}</td>
-                                                                           <td>{parcel?.deliveryManId ? parcel?.deliveryManId : 'Not Assigned'}</td>
-                                                                           <td>{parcel?.status}</td>
+                                                                           <td className='border border-gray-500 px-4 py-2'>{index + 1}</td>
+                                                                           <td className='border border-gray-500 px-4 py-2'>{parcel?.parcelType}</td>
+                                                                           <td className='border border-gray-500 px-4 py-2'>{parcel?.requestedDeliveryDate}</td>
+                                                                           <td className='border border-gray-500 px-4 py-2'>{parcel?.approximateDeliveryDate ? parcel?.approximateDeliveryDate : 'Not Decided'}</td>
+                                                                           <td className='border border-gray-500 px-4 py-2'>{parcel?.bookingDate?.split("T")[0]}</td>
+                                                                           <td className='border border-gray-500 px-4 py-2'>{parcel?.deliveryManId ? parcel?.deliveryManId : 'Not Assigned'}</td>
+                                                                           <td className='border border-gray-500 px-4 py-2'>{parcel?.status}</td>
                                                                            {
-                                                                                parcel?.status === 'Delivered' ?  (
-                                                                                     reviewSubmittedForParcel[parcel._id] ? ( // Check if review is submitted for this parcel
-                                                                                       <td className="flex justify-center">
-                                                                                         <button className="btn" disabled>
-                                                                                           Review Submitted
-                                                                                         </button>
-                                                                                       </td>
-                                                                                     ):(
-                                                                                          <td className="flex justify-center">
-                                                                                            <button
-                                                                                              onClick={() => {
-                                                                                                setShowModal(true);
-                                                                                                setParcelId(parcel._id);
-                                                                                                setDeliveryMenId(parcel?.deliveryManId);
-                                                                                              }}
-                                                                                              className="btn"
-                                                                                            >
-                                                                                              Review
-                                                                                            </button>
-                                                                                          </td>
-                                                                                        )) : (
-                                                                                     parcel?.status === 'pending' ? (
-                                                                                          <td className="flex gap-2">
-                                                                                               <Link to={`/dashboard/update/${parcel?._id}`}>
-                                                                                                    <button className="btn">Update</button>
-                                                                                               </Link>
-                                                                                               <button onClick={() => handleCancel(parcel._id)} className="btn">Cancel</button>
-                                                                                          </td>
-                                                                                     ) : (
-                                                                                          <td className="flex gap-2">
-                                                                                               <button className="btn" disabled="disabled">Update</button>
-                                                                                               <button className="btn" disabled="disabled">Cancel</button>
-                                                                                          </td>
-                                                                                     )
+                                                                                parcel?.status === 'Delivered' ? (
+                                                                                     <td className="border border-gray-500 px-8 py-2 flex justify-center">
+                                                                                          {reviews?.some(review => review.parcelId === parcel?._id) ? (
+                                                                                               <button className="btn" disabled>
+                                                                                                    Review Submitted
+                                                                                               </button>
+                                                                                          ) : (
+                                                                                               <button
+                                                                                                    onClick={() => {
+                                                                                                         setShowModal(true);
+                                                                                                         setParcelId(parcel?._id);
+                                                                                                         setDeliveryMenId(parcel?.deliveryManId);
+                                                                                                    }}
+                                                                                                    className="btn"
+                                                                                               >
+                                                                                                    Review
+                                                                                               </button>
+                                                                                          )}
+                                                                                     </td>
+
+                                                                                ) : parcel?.status === 'pending' ? (
+                                                                                     <td className="border border-gray-500 px-4 py-2 flex flex-wrap justify-center gap-2">
+                                                                                          <Link to={`/deshboard/update/${parcel?._id}`}>
+                                                                                               <button className="btn">Update</button>
+                                                                                          </Link>
+                                                                                          <button onClick={() => handleCancel(parcel?._id)} className="btn">
+                                                                                               Cancel
+                                                                                          </button>
+                                                                                          <button
+                                                                                               onClick={() => {
+                                                                                                    setPayShowModal(true);
+                                                                                                    setPrice(parcel?.price);
+
+                                                                                               }}
+                                                                                               className="btn bg-green-600 text-white">
+                                                                                               Pay
+                                                                                          </button>
+                                                                                     </td>
+                                                                                ) : (
+                                                                                     <td className="border border-gray-500 px-4 py-2 flex flex-col gap-2">
+                                                                                          <button className="btn" disabled="disabled">Update</button>
+                                                                                          <button className="btn" disabled="disabled">Cancel</button>
+                                                                                     </td>
                                                                                 )
                                                                            }
+
 
 
                                                                       </tr>
@@ -278,6 +296,23 @@ const MyParcels = () => {
                                    </button>
                               </form>
 
+                         </div>
+                    </div>
+               }
+               {
+                    showPayModal && <div className="fixed z-50 inset-0 overflow-y-auto bg-opacity-75 bg-gray-500 flex justify-center items-center">
+                         <div className="bg-white rounded shadow-lg p-6 max-w-lg w-full">
+                              <h2 className="text-lg text-center font-semibold mb-4">Payment</h2>
+                              <div>
+
+                                   <Payment price={price}/>
+                              </div>
+                             
+                              <div className="flex justify-center">
+                                   <button onClick={() => 
+                                        setPayShowModal(false)
+                                   } className="btn">Close</button>
+                              </div>
                          </div>
                     </div>
                }

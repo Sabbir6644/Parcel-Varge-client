@@ -1,21 +1,20 @@
 /* eslint-disable react/prop-types */
+
 import { Navigate, useLocation } from "react-router-dom";
-import useAuth from "../../Hooks/useAuth";
+import useAdmin from "../../Hooks/useAdmin";
 
-
-
-const PrivateRoute = ({ children }) => {
+const AdminRoutte = ({children}) => {
      const location = useLocation();
-     const { user, loading } = useAuth();
+     const { admin, adminLoading } = useAdmin();
      // console.log('user:', user);
      // console.log('location.pathname:', location.pathname);
-     if (loading) {
+     if (adminLoading) {
           return null;
      }
      
      return (
           <div>
-               {user ? (
+               {admin ? (
                     children
                ) : (
                     <Navigate state={{ from: location.pathname }} replace to="/login" />
@@ -24,10 +23,4 @@ const PrivateRoute = ({ children }) => {
      );
 };
 
-export default PrivateRoute;
-
-
-
-
-
-
+export default AdminRoutte;

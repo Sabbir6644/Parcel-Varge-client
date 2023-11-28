@@ -74,19 +74,18 @@ const AllUsers = () => {
                     ) : (
                          <div>
                               <h2 className="text-center text-3xl font-semibold my-5">All Users</h2>
-                              <div className="overflow-auto h-[450px] rounded-md uppercase">
-                              <table className="table">
+                              <div className="overflow-auto max-h-[450px] rounded-md uppercase">
+                              <table className="table-auto border-collapse border w-full border-gray-500">
                                    <thead className="bg-gray-200 text-base">
-                                             <tr>
-                                                  <th>#</th>
-                                                  <th>Users Name</th>
-                                                  <th>Phone Number</th>
-                                                  <th>Number of Parcels Booked</th>
-                                                  <th>Total Spent Amount</th>
-                                                  <th className='row-span-3 text-center'>Actions</th>
-                                                  <th></th>
-                                                  <th></th>
-                                                  <th></th>
+                                             <tr className='w-full'>
+                                                  <th className="border border-gray-500 px-4 py-2">#</th>
+                                                  <th className="border border-gray-500 px-4 py-2">Users Name</th>
+                                                  <th className="border border-gray-500 px-4 py-2">Phone Number</th>
+                                                  <th className="border border-gray-500 px-4 py-2">Parcels Booked</th>
+                                                  <th className="border border-gray-500 px-4 py-2">Total Spent</th>
+                                                  <th className="border border-gray-500 px-4 py-2 text-center">Action</th>
+                                                  
+
                                                   
                                              </tr>
                                         </thead>
@@ -94,16 +93,16 @@ const AllUsers = () => {
                                              {currentUsers?.map((user,index) => (
 
                                                   <tr key={user?._id}>
-                                                       <td>{index+1}</td>
-                                                       <td>{user?.name}</td>
-                                                       <td>{user?.parcels[0]?.phoneNumber ? user?.parcels[0]?.phoneNumber : user?.phoneNumber ? user?.phoneNumber : 'no number'}</td>
-                                                       <td>{user?.parcels.length}</td>
-                                                       <td>
-                                                            {user?.parcels.length > 0
+                                                       <td className='border border-gray-500 px-4 py-2'>{index+1}</td>
+                                                       <td className='border border-gray-500 px-4 py-2'>{user?.name}</td>
+                                                       <td className='border border-gray-500 px-4 py-2'>{user?.parcels[0]?.phoneNumber ? user?.parcels[0]?.phoneNumber : user?.phoneNumber ? user?.phoneNumber : 'no number'}</td>
+                                                       <td className='border text-center border-gray-500 px-4 py-2'>{user?.parcels?.length}</td>
+                                                       <td className='border border-gray-500 px-4 py-2 text-center'>
+                                                            {user?.parcels?.length > 0
                                                                  ? user?.parcels.reduce((acc, parcel) => acc + parcel.price, 0)
                                                                  : 0}
                                                        </td>
-                                                       <td className='flex gap-2'>
+                                                       <td className='border border-gray-500 px-4 py-2 flex flex-col gap-2 '>
                                                             {
                                                                  user?.userType === 'deliveryMen' ? <button className='btn' disabled="disabled">Make Delivery Men</button> :
                                                                       <button className='btn' onClick={() => changeStatus(user._id, 'deliveryMen')}>Make Delivery Men</button>
@@ -130,7 +129,7 @@ const AllUsers = () => {
                                         Previous
                                    </button>
 
-                                   {Array.from({ length: Math.ceil(users.length / usersPerPage) }).map((_, index) => (
+                                   {Array.from({ length: Math.ceil(users?.length / usersPerPage) }).map((_, index) => (
                                         <button
                                              key={index}
                                              onClick={() => paginate(index + 1)}
@@ -142,8 +141,8 @@ const AllUsers = () => {
 
                                    <button
                                         onClick={() => paginate(currentPage + 1)}
-                                        disabled={currentPage === Math.ceil(users.length / usersPerPage)}
-                                        className={`py-2 px-4 rounded-lg ${currentPage === Math.ceil(users.length / usersPerPage) ? 'bg-gray-300 text-gray-600 cursor-not-allowed' : 'bg-blue-600 text-white'}`}
+                                        disabled={currentPage === Math.ceil(users?.length / usersPerPage)}
+                                        className={`py-2 px-4 rounded-lg ${currentPage === Math.ceil(users?.length / usersPerPage) ? 'bg-gray-300 text-gray-600 cursor-not-allowed' : 'bg-blue-600 text-white'}`}
                                    >
                                         Next
                                    </button>

@@ -4,12 +4,12 @@ import useAxiosSecure from '../../../../Hooks/useAxiosSecure';
 import Swal from 'sweetalert2';
 
 const BookParcel = () => {
-  const axiosSecure= useAxiosSecure();
-  const {user}=useAuth();
+  const axiosSecure = useAxiosSecure();
+  const { user } = useAuth();
   const today = new Date().toISOString().split('T')[0];
   const [formData, setFormData] = useState({
-    name: user?.displayName, 
-    email: user?.email, 
+    name: user?.displayName,
+    email: user?.email,
     phoneNumber: '',
     parcelType: '',
     parcelWeight: '',
@@ -21,9 +21,9 @@ const BookParcel = () => {
     deliveryAddressLongitude: '',
     price: 0,
     bookingDate: new Date(),
-    status:'pending',
+    status: 'pending',
   });
-// console.log(formData);
+  // console.log(formData);
   const calculatePrice = (weight) => {
     if (weight === 1) return 50;
     if (weight === 2) return 100;
@@ -51,11 +51,12 @@ const BookParcel = () => {
 
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await axiosSecure.post('/parcelBook', formData)
+    console.log('Form Data:', formData);
+    const response = await axiosSecure.post('/user/parcel/Booking', formData)
     // console.log(response.data?.acknowledged);
-    // console.log('Form Data:', formData);
+
     if (response?.data?.acknowledged) {
       Swal.fire({
         position: 'center',
@@ -63,7 +64,7 @@ const BookParcel = () => {
         title: 'Your Booking Successful!',
         showConfirmButton: false,
         timer: 1500
-   })
+      })
     }
   };
 
@@ -108,6 +109,7 @@ const BookParcel = () => {
             <label htmlFor="phoneNumber" className="block font-medium mb-1">
               Phone Number
             </label>
+
             <input
               type="tel"
               id="phoneNumber"
@@ -117,6 +119,7 @@ const BookParcel = () => {
               className="w-full border rounded-md px-3 py-2"
               required
             />
+
           </div>
           {/* parcel type */}
           <div className="flex flex-col md:col-span-1">
@@ -170,7 +173,7 @@ const BookParcel = () => {
             </label>
             <input
               type="tel"
-              id="phoneNumber"
+              id="receiverPhoneNumber"
               name="receiverPhoneNumber"
               onChange={handleChange}
               className="w-full border rounded-md px-3 py-2"
@@ -202,7 +205,7 @@ const BookParcel = () => {
               name="requestedDeliveryDate"
               onChange={handleChange}
               min={today}
-            
+
               className="w-full border rounded-md px-3 py-2"
               required
             />

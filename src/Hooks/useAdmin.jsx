@@ -17,7 +17,7 @@ const useAdmin = () => {
           enabled: !loading,
           queryFn: isAdmin,
      });
-     console.log('useAdmin',data?.data?.userType);
+     // console.log('useAdmin',data?.data?.userType);
      if (data?.data?.userType ==='admin') {
           let admin =true;
           return{admin, adminLoading}

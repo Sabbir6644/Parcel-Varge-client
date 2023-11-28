@@ -1,14 +1,13 @@
-import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
-import useAxiosSecure from "../../../../SharedComponents/Hooks/useAxiosSecure";
-import { useParams } from "react-router-dom";
-import useAuth from "../../../../SharedComponents/Hooks/useAuth";
+import useAuth from "../../../../Hooks/useAuth";
+import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
+import { CardElement, useCartElementState, useStripe } from "@stripe/react-stripe-js";
 
 
 
-const CheckoutForm = () => {
+const CheckoutForm = ({amount}) => {
      const {user}= useAuth();
-     const { amount } = useParams();
      // console.log(amount);
      const price  = parseInt(amount*100);
      // console.log(price);
@@ -17,7 +16,7 @@ const CheckoutForm = () => {
      const [clientSecrete, setClientSecret] = useState('')
      const [trxId, setTrxId] = useState('')
      const stripe = useStripe();
-     const elements = useElements();
+     const elements = useCartElementState();
 
 
      useEffect(() => {
@@ -30,15 +29,13 @@ const CheckoutForm = () => {
                })
      }, [axiosSecure,price])
 
-// console.log(clientSecrete);
+console.log('client secret',clientSecrete);
 
 
 
      const handleSubmit = async (e) => {
           e.preventDefault();
           if (!stripe || !elements) {
-               // Stripe.js has not loaded yet. Make sure to disable
-               // form submission until Stripe.js has loaded.
                return;
           }
           const card = elements.getElement(CardElement);
@@ -74,20 +71,10 @@ const CheckoutForm = () => {
                if (paymentIntent.status==='succeeded') {
                     // console.log(paymentIntent.id);
                     setTrxId(paymentIntent?.id);
-
-                    // const payment= {
-                    //      email: user.email,
-                    //      price:price,
-                    //      date: new Date(),
-                    //      trxId:
-                    // }
-
-
-
                }
           }
 
-
+console.log('trxId',trxId);
 
 
      }
@@ -109,12 +96,13 @@ const CheckoutForm = () => {
                          },
                     }}
                />
-               <button className="py-1 rounded-md px-3 bg-gray-200" type="submit" disabled={!stripe || !clientSecrete}>
+               
+               <button className="py-1 rounded-md px-3 bg-gray-200" type="submit"> 
                     Pay
                </button>
                <p className="text-red-600">{err}</p>
                {
-                    trxId&& <p className="text-green-600">Your transaction id: {trxId}</p>
+                    trxId && <p className="text-green-600">Your transaction id: {trxId}</p>
                }
           </form>
      );
