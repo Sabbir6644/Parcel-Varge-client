@@ -3,7 +3,7 @@ import useAuth from './useAuth';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 const instance = axios.create({
-     baseURL: 'http://localhost:5000',  
+     baseURL: 'https://assignment-12-server-gilt.vercel.app',  
      withCredentials: true
 });
 // https://assignment-12-server-gilt.vercel.app

@@ -1,6 +1,6 @@
 import axios from 'axios';
 const instance = axios.create({
-     baseURL: 'http://localhost:5000',
+     baseURL: 'https://assignment-12-server-gilt.vercel.app',
      withCredentials: true
 });
 // https://assignment-12-server-gilt.vercel.app

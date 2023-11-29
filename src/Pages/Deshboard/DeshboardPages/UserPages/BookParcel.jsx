@@ -53,7 +53,7 @@ const BookParcel = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form Data:', formData);
+    // console.log('Form Data:', formData);
     const response = await axiosSecure.post('/user/parcel/Booking', formData)
     // console.log(response.data?.acknowledged);
 

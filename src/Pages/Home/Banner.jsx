@@ -1,3 +1,4 @@
+import Animation from "../../Components/Animation/Animation";
 
 
 const Banner = () => {
@@ -17,7 +18,7 @@ const Banner = () => {
 
       {/* Search Bar and Heading */}
       <div className="relative z-10 text-center mb-10">
-        <h2 className="text-4xl text-blue-700 max-w-2xl mx-auto md:text-6xl font-bold mb-4">Your Trusted Partner in Parcel Services</h2>
+        <Animation><h2 className="text-4xl text-blue-700 max-w-2xl mx-auto md:text-6xl font-bold mb-4">Your Trusted Partner in Parcel Services</h2></Animation>
         <div className="flex mx-auto relative">
           <input
             type="text"

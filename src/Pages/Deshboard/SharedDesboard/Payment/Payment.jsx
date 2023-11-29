@@ -4,6 +4,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
 
 const stripePromise = loadStripe(import.meta.env.VITE_PAYMENT_PK)
+console.log('stripe promis',stripePromise);
 const Payment = ({price}) => {
      return (
           <div>

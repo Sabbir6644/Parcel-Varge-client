@@ -2,8 +2,8 @@
 import { useEffect, useState } from "react";
 import useAuth from "../../../../Hooks/useAuth";
 import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
-import { CardElement, useCartElementState, useStripe } from "@stripe/react-stripe-js";
-
+import { CardElement,  useElements,  useStripe } from "@stripe/react-stripe-js";
+import Confetti from 'react-confetti';
 
 
 const CheckoutForm = ({amount}) => {
@@ -16,7 +16,8 @@ const CheckoutForm = ({amount}) => {
      const [clientSecrete, setClientSecret] = useState('')
      const [trxId, setTrxId] = useState('')
      const stripe = useStripe();
-     const elements = useCartElementState();
+     const elements = useElements();
+     const [showConfetti, setShowConfetti] = useState(false);
 
 
      useEffect(() => {
@@ -29,12 +30,9 @@ const CheckoutForm = ({amount}) => {
                })
      }, [axiosSecure,price])
 
-console.log('client secret',clientSecrete);
-
-
-
      const handleSubmit = async (e) => {
           e.preventDefault();
+          // console.log('stripe elements',elements);
           if (!stripe || !elements) {
                return;
           }
@@ -45,7 +43,7 @@ console.log('client secret',clientSecrete);
 
           const { error, paymentMethod } = await stripe.createPaymentMethod({
                type: 'card',
-               card,
+               card:card,
           });
 
           if (error) {
@@ -71,6 +69,7 @@ console.log('client secret',clientSecrete);
                if (paymentIntent.status==='succeeded') {
                     // console.log(paymentIntent.id);
                     setTrxId(paymentIntent?.id);
+                    setShowConfetti(true);
                }
           }
 
@@ -79,6 +78,8 @@ console.log('trxId',trxId);
 
      }
      return (
+         <div>
+           {showConfetti && <Confetti />}
           <form className="max-w-lg mx-auto space-y-4" onSubmit={handleSubmit}>
                <CardElement
                     options={{
@@ -102,9 +103,13 @@ console.log('trxId',trxId);
                </button>
                <p className="text-red-600">{err}</p>
                {
-                    trxId && <p className="text-green-600">Your transaction id: {trxId}</p>
+                    trxId && <div className="text-center">
+                         <p className="text-green-600 text-2xl">Your Payment Success</p>
+                         <p className="text-green-600">Transaction ID: {trxId}</p>
+                    </div>
                }
           </form>
+         </div>
      );
 };
 

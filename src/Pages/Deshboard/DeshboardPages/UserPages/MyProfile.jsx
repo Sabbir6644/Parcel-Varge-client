@@ -23,7 +23,7 @@ const MyProfile = () => {
           queryFn: myInfo,
      });
      const info = data?.data;
-     console.log(info);
+     // console.log(info);
 
      const [image, setImage] = useState()
      const [selectedImage, setSelectedImage] = useState(null);

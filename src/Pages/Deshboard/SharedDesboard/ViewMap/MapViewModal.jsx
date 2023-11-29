@@ -1,31 +1,38 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
-import ReactMapGL, { Marker } from 'react-map-gl';
+import  { Map, Marker } from 'react-map-gl';
 
 const MapViewModal = ({ latitude, longitude, closeModal }) => {
      console.log(latitude, longitude);
-  const [viewport, setViewport] = React.useState({
-    latitude: latitude,
-    longitude: longitude,
-    zoom: 12,
-  });
+
 
   return (
 
-      <div className=" max-w-[400px] max-h-[400px] top-20 mx-auto fixed z-50 inset-0 overflow-hidden bg-opacity-75 bg-gray-500 flex justify-center items-center">
-      <ReactMapGL
-        {...viewport}
-        width="100%"
-        height="100%"
-        mapboxApiAccessToken="pk.eyJ1Ijoic2FiYmlyOTkiLCJhIjoiY2xwZmlndXpqMW0wMDJrbzZtdHNmaGMxbSJ9.kzgleqUmdWQMi2tVS76gTw"
-        onViewportChange={(newViewport) => setViewport(newViewport)}
-      >
-        <Marker latitude={latitude} longitude={longitude}>
-          <div>Delivery Location</div>
+    <div className=" max-w-[400px] max-h-[400px] top-20 mx-auto fixed z-50 inset-0 overflow-hidden bg-opacity-75 bg-white flex justify-center items-center">
+
+    <Map
+      mapboxAccessToken={import.meta.env.VITE_MAP_PK}
+      initialViewState={{
+        longitude: longitude || 90.399452,
+        latitude: latitude || 23.777176,
+        zoom: 14
+      }}
+      style={{ width: 600, height: 400 }}
+      mapStyle="mapbox://styles/mapbox/streets-v9"
+    >
+      {latitude && longitude && (
+        <Marker
+          longitude={longitude || 90.399452}
+          latitude={latitude || 23.777176}
+        >
+          <div>Your Marker Content</div>
         </Marker>
-      </ReactMapGL>
-      <button className='btn' onClick={closeModal}>Close Map</button>
-    </div>
+      )}
+    </Map>
+  
+    <button className='btn absolute bottom-5' onClick={closeModal}>Close Map</button>
+  </div>
+  
+  
 
   );
 };
